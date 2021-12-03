@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
     box: {
         backgroundColor: '#fff',
         borderRadius: 10,
-        marginTop: '20%'
+        marginTop: '20%',
+        width: '50%'
     },
     text: {
         fontFamily: 'qb',
