@@ -28,17 +28,19 @@ export const hStyle = StyleSheet.create({
   },
   boxText: {
       width: '75%',
-      marginTop: '20%'
+      marginTop: '20%',
   },
   text: {
       fontSize: 28,
       marginBottom: 15,
       fontFamily: 'qb',
-      textAlign: "center"
+      textAlign: "center",
+      color: '#414560'
   },
   subText: {
     fontSize: 16,
     fontFamily: 'qsb',
-    textAlign: "center"
+    textAlign: "center",
+    color: '#414560'
   }
 });

@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
 import ButtonHello from "./ButtonHello";
 import { hStyle } from "./styleHello";
 
-export default function SliderHello() {
+export default function SliderHello({ navigation }) {
   return (
     <View style={hStyle.container}>
       <Swiper
@@ -51,7 +51,10 @@ export default function SliderHello() {
               industry.
             </Text>
           </View>
-          <ButtonHello />
+          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('mobileValid')}>
+            <ButtonHello />
+          </TouchableOpacity>
+          
         </View>
       </Swiper>
     </View>
