@@ -33,7 +33,9 @@
     "react-native-web-swiper": "^2.2.1",
     "react-phone-number-input": "^3.1.41",
     "react-redux": "^7.2.6",
-    "redux": "^4.1.2"
+    "redux": "^4.1.2",
+    "undefined": "@react-native-async-storage/async-storage\\",
+    "@react-native-async-storage/async-storage": "~1.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

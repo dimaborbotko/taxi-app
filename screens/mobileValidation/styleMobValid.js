@@ -58,6 +58,11 @@ export const mStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop: 10,
+    },
+    codeReg: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
         marginTop: 10
     },
     quest: {

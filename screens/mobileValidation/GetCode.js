@@ -9,10 +9,11 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
+import BtnGoReg from "./BtnGoReg";
 
 const CELL_COUNT = 5;
 
-export default function GetCode() {
+export default function GetCode({ navigation }) {
   const [value, setValue] = useState("");
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -24,13 +25,31 @@ export default function GetCode() {
   useEffect(() => {
     if (value == "11111") {
       setColor("#17cb8e");
-    } else if(value !== '11111'){
-        setColor('black')
+    } else if (value !== "11111") {
+      setColor("black");
     }
   }, [value]);
 
-  console.log(value);
-  
+  const reg = () => {
+    if (value == "11111") {
+      return (
+        <View style={mStyles.codeReg}>
+          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('registration')}>
+            <BtnGoReg />
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return (
+        <View style={mStyles.againCode}>
+          <Text style={mStyles.quest}>Didn`t recieve code?</Text>
+          <TouchableOpacity activeOpacity={0.7}>
+            <Text style={mStyles.send}>Send again</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  };
 
   return (
     <View style={mStyles.container}>
@@ -67,12 +86,7 @@ export default function GetCode() {
             style={mStyles.done}
           />
         </View>
-        <View style={mStyles.againCode}>
-          <Text style={mStyles.quest}>Didn`t recieve code?</Text>
-          <TouchableOpacity activeOpacity={0.7}>
-            <Text style={mStyles.send}>Send again</Text>
-          </TouchableOpacity>
-        </View>
+        {reg()}
       </View>
     </View>
   );
