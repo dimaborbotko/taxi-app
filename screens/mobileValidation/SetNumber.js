@@ -47,7 +47,7 @@ export default function SetNumber({ navigation }) {
         </View>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => {
+          onPress={storeData, () => {
             if(value.length == 9){
               navigation.push("getCode");
             }

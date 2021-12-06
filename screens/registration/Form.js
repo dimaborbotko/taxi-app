@@ -11,10 +11,10 @@ export default function Form() {
     return (
       <View style={rStyle.container}>
         <View style={rStyle.btns}>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => setSwitchOn(1)}>
+          <View style={rStyle.shadow}>
             <BtnReg text="Sign Up" />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => setSwitchOn(0)}>
+          </View>
+          <TouchableOpacity activeOpacity={0.7} onPress={() => setSwitchOn(1)}>
             <BtnReg text="Sign In" />
           </TouchableOpacity>
         </View>
@@ -25,12 +25,12 @@ export default function Form() {
   return (
     <View style={rStyle.container}>
       <View style={rStyle.btns}>
-        <TouchableOpacity activeOpacity={0.7} onPress={() => setSwitchOn(1)}>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => setSwitchOn(0)}>
           <BtnReg text="Sign Up" />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7} onPress={() => setSwitchOn(0)}>
+        <View style={rStyle.shadow}>
           <BtnReg text="Sign In" />
-        </TouchableOpacity>
+        </View>
       </View>
       <SignIn />
     </View>
