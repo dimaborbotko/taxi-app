@@ -1,26 +1,47 @@
-import React, { useState, useRef } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { mStyles } from "./styleMobValid";
 import PhoneInput from "react-native-phone-number-input";
 import BtnValidNum from "./BtnValidNum";
 
 export default function SetNumber({ navigation }) {
-  const [value, setValue] = useState("978379316");
+  const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
   const phoneInput = useRef < PhoneInput > null;
 
+  
+  useEffect(() => {
+    getData()
+  }, [])
+
   const storeData = async () => {
+    if (value.length < 9) {
+      Alert.alert("Warning!", "Enter a valid number!");
+    } else {
+      navigation.navigate('getCode')
+      try {
+        await AsyncStorage.setItem("telNumber", value);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const getData = () => {
     try {
-      await AsyncStorage.setItem('telNumber', value)
-    } catch (e) {
+        AsyncStorage.getItem('telNumber')
+          .then(value => {
+            if(value >= 9) {
+              navigation.replace('registration')
+            }
+          })
+    } catch(e) {
       console.log(e)
     }
   }
 
-
- 
 
   return (
     <View style={mStyles.container}>
@@ -30,7 +51,6 @@ export default function SetNumber({ navigation }) {
           <Text style={mStyles.subTitle}>Get moving with Taxi</Text>
         </View>
         <View style={mStyles.enterNum}>
-          
           <PhoneInput
             useRef={phoneInput}
             defaultValue={value}
@@ -47,11 +67,7 @@ export default function SetNumber({ navigation }) {
         </View>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={storeData, () => {
-            if(value.length == 9){
-              navigation.push("getCode");
-            }
-          }}
+          onPress={storeData}
         >
           <BtnValidNum />
         </TouchableOpacity>
@@ -65,4 +81,4 @@ export default function SetNumber({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({});
+

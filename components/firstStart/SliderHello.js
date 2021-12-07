@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonHello from "./ButtonHello";
 import { hStyle } from "./styleHello";
 
 export default function SliderHello({ navigation }) {
+  const [isFirstLaunched, setIsFirstLaunched] = useState(null)
+
+  useEffect(async () => {
+    const appData = AsyncStorage.getItem('isFirstLaunched', isFirstLaunched)
+    console.log(appData)
+    if(appData == null){
+      setIsFirstLaunched(true)
+      AsyncStorage.setItem('isFirstLaunched', 'false')
+    } else {
+      setIsFirstLaunched(false)
+    }
+  }, [])
   return (
     <View style={hStyle.container}>
       <Swiper
