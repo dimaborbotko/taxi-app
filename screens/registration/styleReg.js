@@ -60,5 +60,10 @@ export const rStyle = StyleSheet.create({
     fontFamily: 'qsb',
     fontSize: 13,
     color: '#414560'
-  }
+  },
+
+  errorText: {
+    fontSize: 10,
+    color: 'red',
+  },
 });
