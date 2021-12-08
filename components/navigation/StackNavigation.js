@@ -15,7 +15,6 @@ import { auth } from "../../components/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
-
 const fonts = () =>
   Font.loadAsync({
     ql: require("../../fonts/Quicksand-Light.ttf"),

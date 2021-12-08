@@ -28,11 +28,12 @@ export default function Form({ navigation }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [name, setName] = useState("");
+  
 
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
-  const [nameLogin, setNameLogin] = useState("");
 
   const [user, setUser] = useState({});
 
@@ -42,26 +43,12 @@ export default function Form({ navigation }) {
   })
 
   // useEffect(async () => {
-  //   try{
-  //     await AsyncStorageLib.setItem('signIn', user.email)
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-    
+  //   await AsyncStorageLib.setItem("nameSave", name)
   // }, []);
-  // useEffect(async () => {
-  //   try{
-  //     if(emailLogin){
-  //       await AsyncStorageLib.setItem('emailLogin', emailLogin)
-  //     } 
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-    
-  // }, []);
+  console.log(name)
 
   const signUpUser = () => {
-    createUserWithEmailAndPassword(auth, email, password, name)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((re) => {
         console.log(re);
         navigation.navigate("main");
@@ -72,7 +59,7 @@ export default function Form({ navigation }) {
   };
 
   const logInUser = () => {
-    signInWithEmailAndPassword(auth, emailLogin, passwordLogin, name)
+    signInWithEmailAndPassword(auth, emailLogin, passwordLogin)
       .then((re) => {
         console.log(re);
         navigation.navigate("main");
