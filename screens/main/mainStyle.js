@@ -4,7 +4,6 @@ import { StyleSheet, Text, View } from "react-native";
 export const mainStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red",
   },
   box: {
     alignItems: "center",
@@ -14,11 +13,13 @@ export const mainStyles = StyleSheet.create({
     width: "90%",
     backgroundColor: "#cad1d9",
     borderRadius: 15,
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: '15%',
+    position: "absolute"
   },
   textBox: {
     width: '90%',
-    marginBottom: 20
+    marginVertical: 20
   },
   greeting: {
       fontFamily: 'qsb',
