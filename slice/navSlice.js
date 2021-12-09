@@ -7,7 +7,12 @@ const initialState = {
       lng: 35.36533,
     },
   },
-  destination: null,
+  destination: {
+    location: {
+      lat: 46.84891,
+      lng: 35.36533,
+    },
+  },
   travelTimeInformation: null,
   placeholder: 'Where from?'
 };

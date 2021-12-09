@@ -15,7 +15,8 @@ export const mainStyles = StyleSheet.create({
     borderRadius: 15,
     alignItems: "center",
     marginTop: '15%',
-    position: "absolute"
+    position: "absolute",
+    zIndex: 10
   },
   textBox: {
     width: '90%',
@@ -24,10 +25,13 @@ export const mainStyles = StyleSheet.create({
   greeting: {
       fontFamily: 'qsb',
       fontSize: 16,
+      color: '#414560'
       
   },
   title: {
       fontFamily: 'qb',
-      fontSize: 23
-  }
+      fontSize: 23,
+      color: '#414560'
+  },
+  
 });

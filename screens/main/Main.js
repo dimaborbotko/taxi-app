@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { selectOrigin, setDestination, setOrigin } from "../../slice/navSlice";
 import Map from "../../components/Map";
 import BtnCurrLoc from "./BtnCurrLoc";
+import { Fontisto } from "@expo/vector-icons";
+import { mStyles } from "../mobileValidation/styleMobValid";
 
 export default function Main({ navigation }) {
   const [user, setUser] = useState({});
@@ -28,16 +30,16 @@ export default function Main({ navigation }) {
     setUser(currentUser);
   });
 
-  const ref = useRef()
-  const [active, setActive] = useState(false)
+  const ref = useRef();
+  const [active, setActive] = useState(false);
 
-  useEffect( () => {
-    if(active == true) {
-      ref.current.setAddressText("My current location")
+  useEffect(() => {
+    if (active == true) {
+      ref.current.setAddressText("My current location");
     } else {
-      ref.current.setAddressText("")
+      ref.current.setAddressText("");
     }
-  }, [active])
+  }, [active]);
   // useEffect( () => {
   //   ref.current.setAddressText("")
   // }, [])
@@ -53,7 +55,6 @@ export default function Main({ navigation }) {
           </View>
 
           <GooglePlacesAutocomplete
-          ref={ref}
             styles={{
               container: {
                 flex: 0,
@@ -85,7 +86,7 @@ export default function Main({ navigation }) {
               key: GOOGLE_MAPS_API_KEY,
               language: "en",
             }}
-            placeholder="Where from?"
+            placeholder="Where to?"
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
             onPress={(data, details = null) => {
@@ -103,6 +104,61 @@ export default function Main({ navigation }) {
             setAddressText={"My current location"}
             // setAddressText={"My current location" ? active == true : ''}
           />
+          <View style={styles.toGo}>
+            <View style={{marginLeft: 20, marginBottom: 18, marginTop: -10}}>
+              <Fontisto name="arrow-return-right" size={20} color='#414560' />
+            </View>
+
+            <GooglePlacesAutocomplete
+              ref={ref}
+              styles={{
+                container: {
+                  flex: 0,
+                  alignItems: "center",
+                  marginBottom: 20,
+                },
+                textInputContainer: {
+                  width: "90%",
+                },
+                textInput: {
+                  fontFamily: "qsb",
+                  fontSize: 14,
+                },
+                listView: {
+                  maxHeight: 200,
+                  width: "90%",
+                },
+                row: {
+                  backgroundColor: "#cad1d9",
+                },
+                separator: {
+                  backgroundColor: "#fff",
+                  height: 1,
+                },
+              }}
+              enablePoweredByContainer={false}
+              minLength={2}
+              query={{
+                key: GOOGLE_MAPS_API_KEY,
+                language: "en",
+              }}
+              placeholder="Where from?"
+              nearbyPlacesAPI="GooglePlacesSearch"
+              debounce={400}
+              onPress={(data, details = null) => {
+                dispatch(
+                  setDestination({
+                    location: details.geometry.location,
+                    description: data.description,
+                    name: details.name,
+                  })
+                );
+              }}
+              fetchDetails={true}
+              returnKeyType={"search"}
+              setAddressText={"My current location"}
+            />
+          </View>
         </View>
       </View>
       <View style={styles.btn}>
@@ -112,13 +168,13 @@ export default function Main({ navigation }) {
             dispatch(
               setOrigin({
                 location: {
-                  lat: 46.8442169648067, 
+                  lat: 46.8442169648067,
                   lng: 35.38044187451933,
                 },
               })
-            )
-            setActive(true)
-            console.log(active)
+            );
+            setActive(true);
+            console.log(active);
           }}
         >
           <BtnCurrLoc text="Use my current Location" />
@@ -144,9 +200,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "flex-end",
     position: "absolute",
-    bottom: 140,
+    bottom: 100,
   },
   autocomp: {
     flex: 1,
+  },
+  toGo: {
+    width: "100%",
   },
 });
