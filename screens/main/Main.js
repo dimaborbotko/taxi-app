@@ -1,33 +1,35 @@
+import { GOOGLE_MAPS_API_KEY } from "@env";
+import { Entypo, Fontisto } from "@expo/vector-icons";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { GOOGLE_MAPS_API_KEY } from "@env";
-import BtnSubmit from "../registration/BtnSubmit";
-import { auth } from "../../components/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { mainStyles } from "./mainStyle";
 import { useDispatch, useSelector } from "react-redux";
+import Destination from "../../components/Destinstion";
+import { auth } from "../../components/firebase";
+import Map from "../../components/Map";
+import WayPointInput from "../../components/WayPointInput";
 import {
   selectDestination,
   selectOrigin,
-  setDestination,
   setOrigin,
 } from "../../slice/navSlice";
-import Map from "../../components/Map";
-import BtnCurrLoc from "./BtnCurrLoc";
-import { Fontisto } from "@expo/vector-icons";
-import { mStyles } from "../mobileValidation/styleMobValid";
-import { Entypo } from "@expo/vector-icons";
-import BtnReg from "../registration/BtnReg";
+import BtnSubmit from "../registration/BtnSubmit";
+import { mainStyles } from "./mainStyle";
+import * as Location from "expo-location";
+
+
 
 export default function Main({ navigation }) {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [user, setUser] = useState({});
+  const [wayPointAdd, setWayPointAdd] = useState(false);
   const logOutUser = async () => {
     await signOut(auth);
     navigation.navigate("registration");
     console.log(logOutUser);
   };
-
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
 
@@ -51,9 +53,32 @@ export default function Main({ navigation }) {
       ref.current.setAddressText("");
     }
   }, [active]);
-  // useEffect( () => {
-  //   ref.current.setAddressText("")
-  // }, [])
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
+
+
+
+  
+  
 
   return (
     <View style={mainStyles.container}>
@@ -65,63 +90,33 @@ export default function Main({ navigation }) {
             <Text style={mainStyles.title}>Where are you going?</Text>
           </View>
 
-          <GooglePlacesAutocomplete
-            styles={{
-              container: {
-                flex: 0,
-                alignItems: "center",
-                marginBottom: 20,
-              },
-              textInputContainer: {
-                width: "90%",
-              },
-              textInput: {
-                fontFamily: "qsb",
-                fontSize: 14,
-              },
-              listView: {
-                maxHeight: 200,
-                width: "90%",
-                zIndex: 20,
-                position: "absolute",
-                marginTop: "15%",
-              },
-              row: {
-                backgroundColor: "#cad1d9",
-              },
-              separator: {
-                backgroundColor: "#fff",
-                height: 1,
-              },
-            }}
-            enablePoweredByContainer={false}
-            minLength={2}
-            query={{
-              key: GOOGLE_MAPS_API_KEY,
-              language: "en",
-            }}
-            placeholder="Where to?"
-            nearbyPlacesAPI="GooglePlacesSearch"
-            debounce={400}
-            onPress={(data, details = null) => {
-              dispatch(
-                setDestination({
-                  location: details.geometry.location,
-                  description: data.description,
-                  name: details.name,
-                })
-              );
-              console.log(data);
-              // dispatch(setDestination(null));
-            }}
-            fetchDetails={true}
-            returnKeyType={"search"}
-            setAddressText={"My current location"}
-            // setAddressText={"My current location" ? active == true : ''}
-          />
+          <Destination />
+
+          {wayPointAdd && <WayPointInput />}
+
           <View style={styles.toGo}>
-            <View style={{ marginLeft: 20, marginBottom: 18, marginTop: -10 }}>
+            <View
+              style={{
+                marginLeft: 20,
+                marginBottom: 18,
+                marginTop: -10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Fontisto name="arrow-return-right" size={20} color="#414560" />
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => setWayPointAdd(true)}
+              >
+                <Entypo
+                  style={{ marginRight: 15 }}
+                  name="plus"
+                  size={27}
+                  color="#414560"
+                />
+              </TouchableOpacity>
             </View>
 
             <GooglePlacesAutocomplete
@@ -181,13 +176,11 @@ export default function Main({ navigation }) {
         <TouchableOpacity
           style={active ? { display: "none" } : { display: "flex" }}
           activeOpacity={0.7}
-          onPress={() => {
+          onPress={console.log(origin), () => {
             dispatch(
               setOrigin({
-                location: {
-                  lat: 46.8442,
-                  lng: 35.3804,
-                },
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
               })
             );
             setActive(true);

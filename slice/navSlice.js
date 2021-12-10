@@ -2,21 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   origin: null,
-  // {
-  //   location: null
-  //   // {
-  //   //   lat: 46.8442169648067,
-  //   //   lng: 35.38044187451933,
-  //   // },
-  // },
+
+  waypoint: null,
+
   destination: null,
-  // {
-  //   location: null 
-  //   // {
-  //   //   lat: 46.8442169648067,
-  //   //   lng: 35.38044187451933,
-  //   // },
-  // },
+ 
   travelTimeInformation: null,
 };
 
@@ -27,6 +17,9 @@ export const navSlice = createSlice({
     setOrigin: (state, action) => {
       state.origin = action.payload;
     },
+    setWaypoint: (state, action) => {
+      state.waypoint = action.payload
+    },
     setDestination: (state, action) => {
       state.destination = action.payload;
     },
@@ -36,11 +29,12 @@ export const navSlice = createSlice({
   },
 });
 
-export const { setOrigin, setDestination, setTravelTimeInformation } =
+export const { setOrigin, setWaypoint, setDestination, setTravelTimeInformation } =
   navSlice.actions;
 
 // Selectors
 export const selectOrigin = (state) => state.nav.origin;
+export const selectWayPoint = (state) => state.nav.waypoint
 export const selectDestination = (state) => state.nav.destination;
 export const selectTravelTimeInformation = (state) =>
   state.nav.travelTimeInformation;
