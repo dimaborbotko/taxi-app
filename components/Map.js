@@ -25,38 +25,69 @@ export default function Map() {
     }
   }, [origin]);
 
+  useEffect(() => {
+    if (!origin || !destination) return;
+    mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
+      edgePadding: { top: 700, right: 100, bottom: 100, left: 100 },
+    });
+  }, [origin, destination]);
+
   return (
     <MapView
       ref={mapRef}
       customMapStyle={mapStyle}
       style={styles.map}
       initialRegion={{
-        latitude: origin.location.lat,
-        longitude: origin.location.lng,
+        latitude: 46.8442,
+        longitude: 35.3804,
         latitudeDelta: 0.005,
         longitudeDelta: 0.005,
       }}
     >
-      <Marker
-        coordinate={{
-          latitude: origin.location.lat,
-          longitude: origin.location.lng,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        }}
-        title={origin.name}
-        description={origin.description}
-        identifier="origin"
-        draggable
-      />
-      {origin && destination && (
-        <MapViewDirections
-          origin={origin.description}
-          destination={destination.description}
-          apikey={GOOGLE_MAPS_API_KEY}
-          strokeWidth={3}
-          strokeColor="red"
+      {origin?.location && (
+        <Marker
+          coordinate={{
+            latitude: origin.location.lat,
+            longitude: origin.location.lng,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          }}
+          title={origin.name}
+          description={origin.description}
+          identifier="origin"
+          draggable
         />
+      )}
+
+      {origin && destination && (
+        <View>
+          <MapViewDirections
+            origin={{
+              latitude: origin.location.lat,
+              longitude: origin.location.lng,
+            }}
+            destination={{
+              latitude: destination.location.lat,
+              longitude: destination.location.lng,
+            }}
+            lineDashPattern={[0]}
+            apikey={GOOGLE_MAPS_API_KEY}
+            strokeWidth={5}
+            strokeColor="red"
+          />
+          <Marker
+            coordinate={{
+              latitude: destination.location.lat,
+              longitude: destination.location.lng,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+            }}
+            title={destination.name}
+            description={destination.description}
+            identifier="destination"
+            draggable
+          />
+        </View>
       )}
     </MapView>
   );

@@ -14,19 +14,19 @@ export default function BtnCurrLoc({ text }) {
 }
 
 const styles = StyleSheet.create({
-  btn: {
+  btnLoc: {
     backgroundColor: "transparent",
-    borderColor: "#2076db",
     borderWidth: 2,
+    borderColor: "#2076db",
   },
   pos: {
     flexDirection: "row",
-    padding:10
+    padding: 10,
   },
   btnText: {
     fontFamily: "qb",
     fontSize: 18,
     marginLeft: 10,
-    color: '#2076db'
+    color: "#2076db",
   },
 });

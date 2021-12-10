@@ -6,12 +6,19 @@ import BtnSubmit from "../registration/BtnSubmit";
 import { auth } from "../../components/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { mainStyles } from "./mainStyle";
-import { useDispatch } from "react-redux";
-import { selectOrigin, setDestination, setOrigin } from "../../slice/navSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectDestination,
+  selectOrigin,
+  setDestination,
+  setOrigin,
+} from "../../slice/navSlice";
 import Map from "../../components/Map";
 import BtnCurrLoc from "./BtnCurrLoc";
 import { Fontisto } from "@expo/vector-icons";
 import { mStyles } from "../mobileValidation/styleMobValid";
+import { Entypo } from "@expo/vector-icons";
+import BtnReg from "../registration/BtnReg";
 
 export default function Main({ navigation }) {
   const [user, setUser] = useState({});
@@ -20,6 +27,9 @@ export default function Main({ navigation }) {
     navigation.navigate("registration");
     console.log(logOutUser);
   };
+
+  const origin = useSelector(selectOrigin);
+  const destination = useSelector(selectDestination);
 
   const dispatch = useDispatch();
 
@@ -31,6 +41,7 @@ export default function Main({ navigation }) {
   });
 
   const ref = useRef();
+  const btnRef = useRef();
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -71,6 +82,9 @@ export default function Main({ navigation }) {
               listView: {
                 maxHeight: 200,
                 width: "90%",
+                zIndex: 20,
+                position: "absolute",
+                marginTop: "15%",
               },
               row: {
                 backgroundColor: "#cad1d9",
@@ -91,13 +105,14 @@ export default function Main({ navigation }) {
             debounce={400}
             onPress={(data, details = null) => {
               dispatch(
-                setOrigin({
+                setDestination({
                   location: details.geometry.location,
                   description: data.description,
                   name: details.name,
                 })
               );
-              dispatch(setDestination(null));
+              console.log(data);
+              // dispatch(setDestination(null));
             }}
             fetchDetails={true}
             returnKeyType={"search"}
@@ -105,8 +120,8 @@ export default function Main({ navigation }) {
             // setAddressText={"My current location" ? active == true : ''}
           />
           <View style={styles.toGo}>
-            <View style={{marginLeft: 20, marginBottom: 18, marginTop: -10}}>
-              <Fontisto name="arrow-return-right" size={20} color='#414560' />
+            <View style={{ marginLeft: 20, marginBottom: 18, marginTop: -10 }}>
+              <Fontisto name="arrow-return-right" size={20} color="#414560" />
             </View>
 
             <GooglePlacesAutocomplete
@@ -147,12 +162,13 @@ export default function Main({ navigation }) {
               debounce={400}
               onPress={(data, details = null) => {
                 dispatch(
-                  setDestination({
+                  setOrigin({
                     location: details.geometry.location,
                     description: data.description,
                     name: details.name,
                   })
                 );
+                console.log(data);
               }}
               fetchDetails={true}
               returnKeyType={"search"}
@@ -163,22 +179,39 @@ export default function Main({ navigation }) {
       </View>
       <View style={styles.btn}>
         <TouchableOpacity
+          style={active ? { display: "none" } : { display: "flex" }}
           activeOpacity={0.7}
           onPress={() => {
             dispatch(
               setOrigin({
                 location: {
-                  lat: 46.8442169648067,
-                  lng: 35.38044187451933,
+                  lat: 46.8442,
+                  lng: 35.3804,
                 },
               })
             );
             setActive(true);
-            console.log(active);
           }}
         >
-          <BtnCurrLoc text="Use my current Location" />
+          <View
+            style={[
+              styles.btnLoc,
+              active
+                ? { borderColor: "transparent" }
+                : { borderColor: "#2076db" },
+            ]}
+          >
+            <View style={styles.pos}>
+              <Entypo name="direction" size={24} color="#2076db" />
+              <Text style={styles.btnText}>My current location</Text>
+            </View>
+          </View>
         </TouchableOpacity>
+        {destination && origin && (
+          <TouchableOpacity activeOpacity={0.7}>
+            <BtnSubmit text="Apply" />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -207,5 +240,19 @@ const styles = StyleSheet.create({
   },
   toGo: {
     width: "100%",
+  },
+  btnLoc: {
+    backgroundColor: "transparent",
+    borderWidth: 2,
+  },
+  pos: {
+    flexDirection: "row",
+    padding: 10,
+  },
+  btnText: {
+    fontFamily: "qb",
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#2076db",
   },
 });
