@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: -35,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   text: {
     fontFamily: "qb",

@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,9 +14,11 @@ const firebaseConfig = {
   storageBucket: "fir-taxi-app-6f7a7.appspot.com",
   messagingSenderId: "1040664910042",
   appId: "1:1040664910042:web:0e21edab6cec88ed6cede3",
-  measurementId: "G-36SNNY31YY"
+  measurementId: "G-36SNNY31YY",
+  databaseURL: 'https://fir-taxi-app-6f7a7-default-rtdb.europe-west1.firebasedatabase.app/'
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const database = getDatabase(app);
 export const auth = getAuth(app);

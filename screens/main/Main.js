@@ -24,6 +24,7 @@ import {
 } from "../../slice/navSlice";
 import BtnSubmit from "../registration/BtnSubmit";
 import BtnCard from "./BtnCard";
+import BtnPickUp from "./BtnPickUp";
 import { mainStyles } from "./mainStyle";
 
 export default function Main({ navigation }) {
@@ -219,11 +220,12 @@ export default function Main({ navigation }) {
       </View>
       {applyActive && (
         <View style={styles.pickUp}>
+          <PickUpTaxi />
           <TouchableOpacity activeOpacity={0.7}>
             <BtnCard />
           </TouchableOpacity>
             <TouchableOpacity>
-              <PickUpTaxi />
+              <BtnPickUp text="Request"/>
             </TouchableOpacity>
         </View>
       )}

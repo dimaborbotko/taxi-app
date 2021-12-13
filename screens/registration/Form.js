@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from "react";
 import {
-  StyleSheet,
+  createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword
+} from "firebase/auth";
+import React, { useState } from "react";
+import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import { auth } from "../../components/firebase";
 import BtnReg from "./BtnReg";
 import BtnSubmit from "./BtnSubmit";
 // import SignIn from "./SignIn";
 // import SignUp from "./SignUp";
 import { rStyle } from "./styleReg";
-import { auth } from "../../components/firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} from "firebase/auth";
-import AsyncStorageLib from "@react-native-async-storage/async-storage";
 
 export default function Form({ navigation }) {
   const [switchOn, setSwitchOn] = useState(0);
