@@ -18,24 +18,47 @@ export default function Map() {
   const wayPoint = useSelector(selectWayPoint);
 
   const mapRef = useRef(null);
+  const destRef = useRef(null);
 
   useEffect(() => {
     if (origin) {
-      mapRef.current.animateToRegion({
-        latitude: origin.latitude,
-        longitude: origin.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
+      mapRef.current.animateToRegion(
+        {
+          latitude: origin.latitude,
+          longitude: origin.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      );
     }
   }, [origin]);
-
   useEffect(() => {
-    if (!origin || !destination) return;
-    mapRef.current.fitToSuppliedMarkers(["origin", "destination", "wayPoint"], {
-      edgePadding: { top: 1150, right: 250, bottom: 320, left: 250 },
-    });
-  }, [destination, wayPoint]);
+    if (destination) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: destination.location.lat,
+          longitude: destination.location.lng,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      );
+    }
+  }, [destination]);
+  useEffect(() => {
+    if (wayPoint) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: wayPoint.location.lat,
+          longitude: wayPoint.location.lng,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      );
+    }
+  }, [wayPoint]);
 
   return (
     <MapView
@@ -61,11 +84,70 @@ export default function Map() {
           description={origin.description}
           identifier="origin"
           draggable
-          >
-          <Image style={{width: 20, height: 20}} source={require("../assets/meeting-point.png")}/>
-          </Marker>
+        >
+          <Image
+            style={{ width: 20, height: 20 }}
+            source={require("../assets/meeting-point.png")}
+          />
+        </Marker>
+      )}
+      {destination && (
+        <Marker
+          coordinate={{
+            latitude: destination.location.lat,
+            longitude: destination.location.lng,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          }}
+          title={destination.name}
+          description={destination.description}
+          identifier="destination"
+          draggable
+        >
+          <Image
+            style={{ width: 20, height: 20 }}
+            source={require("../assets/placeholder.png")}
+          />
+        </Marker>
+      )}
+      {wayPoint && (
+        <Marker
+          coordinate={{
+            latitude: wayPoint.location.lat,
+            longitude: wayPoint.location.lng,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          }}
+          title={wayPoint.name}
+          description={wayPoint.description}
+          identifier="wayPoint"
+          draggable
+        >
+          <Image
+            style={{ width: 20, height: 20 }}
+            source={require("../assets/placeholder.png")}
+          />
+        </Marker>
       )}
 
+      {origin && destination && (
+        <View>
+          <MapViewDirections
+            origin={{
+              latitude: origin.latitude,
+              longitude: origin.longitude,
+            }}
+            destination={{
+              latitude: destination.location.lat,
+              longitude: destination.location.lng,
+            }}
+            lineDashPattern={[0]}
+            apikey={GOOGLE_MAPS_API_KEY}
+            strokeWidth={5}
+            strokeColor="red"
+          />
+        </View>
+      )}
       {origin && destination && wayPoint && (
         <View>
           <MapViewDirections
@@ -88,36 +170,6 @@ export default function Map() {
               },
             ]}
           />
-          <Marker
-            coordinate={{
-              latitude: destination.location.lat,
-              longitude: destination.location.lng,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005,
-            }}
-            title={destination.name}
-            description={destination.description}
-            identifier="destination"
-            draggable
-          >
-            <Image style={{width: 20, height: 20}} source={require("../assets/placeholder.png")}/>
-          </Marker>
-          {wayPoint?.location && (
-            <Marker
-              coordinate={{
-                latitude: wayPoint.location.lat,
-                longitude: wayPoint.location.lng,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005,
-              }}
-              title={wayPoint.name}
-              description={wayPoint.description}
-              identifier="wayPoint"
-              draggable
-            >
-              <Image style={{width: 20, height: 20}} source={require("../assets/placeholder.png")}/>
-            </Marker>
-          )}
         </View>
       )}
     </MapView>

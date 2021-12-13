@@ -1,13 +1,21 @@
 import { GOOGLE_MAPS_API_KEY } from "@env";
 import { Entypo, Fontisto } from "@expo/vector-icons";
+import * as Location from "expo-location";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  TouchableHighlight,
+} from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useDispatch, useSelector } from "react-redux";
 import Destination from "../../components/Destinstion";
 import { auth } from "../../components/firebase";
 import Map from "../../components/Map";
+import PickUpTaxi from "../../components/PickUpTaxi";
 import WayPointInput from "../../components/WayPointInput";
 import {
   selectDestination,
@@ -15,16 +23,16 @@ import {
   setOrigin,
 } from "../../slice/navSlice";
 import BtnSubmit from "../registration/BtnSubmit";
+import BtnCard from "./BtnCard";
 import { mainStyles } from "./mainStyle";
-import * as Location from "expo-location";
-
-
 
 export default function Main({ navigation }) {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [applyActive, setApplyActive] = useState(false);
   const [user, setUser] = useState({});
   const [wayPointAdd, setWayPointAdd] = useState(false);
+
   const logOutUser = async () => {
     await signOut(auth);
     navigation.navigate("registration");
@@ -73,12 +81,6 @@ export default function Main({ navigation }) {
   } else if (location) {
     text = JSON.stringify(location);
   }
-
-
-
-
-  
-  
 
   return (
     <View style={mainStyles.container}>
@@ -176,15 +178,18 @@ export default function Main({ navigation }) {
         <TouchableOpacity
           style={active ? { display: "none" } : { display: "flex" }}
           activeOpacity={0.7}
-          onPress={console.log(origin), () => {
-            dispatch(
-              setOrigin({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
-              })
-            );
-            setActive(true);
-          }}
+          onPress={
+            (console.log(origin),
+            () => {
+              dispatch(
+                setOrigin({
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                })
+              );
+              setActive(true);
+            })
+          }
         >
           <View
             style={[
@@ -201,11 +206,27 @@ export default function Main({ navigation }) {
           </View>
         </TouchableOpacity>
         {destination && origin && (
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity
+            style={
+              applyActive == true ? { display: "none" } : { display: "flex" }
+            }
+            activeOpacity={0.7}
+            onPress={() => setApplyActive(true)}
+          >
             <BtnSubmit text="Apply" />
           </TouchableOpacity>
         )}
       </View>
+      {applyActive && (
+        <View style={styles.pickUp}>
+          <TouchableOpacity activeOpacity={0.7}>
+            <BtnCard />
+          </TouchableOpacity>
+            <TouchableOpacity>
+              <PickUpTaxi />
+            </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -214,6 +235,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "flex-end",
   },
   box: {
     flex: 1,
@@ -247,5 +269,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
     color: "#2076db",
+  },
+  pickUp: {
+    backgroundColor: "red",
+    width: "90%",
+    alignSelf: "center",
+    bottom: 0,
+    position: "absolute",
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
