@@ -1,13 +1,32 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity } from "react-native";
-import BtnPickUp from "../screens/main/BtnPickUp";
-import { mainStyles } from "../screens/main/mainStyle";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setStandart,
+  setVan,
+  setPremium,
+  selectStandart,
+  selectVan,
+  selectPremium,
+} from "../slice/typeCar";
 
 export default function PickUpTaxi() {
+  const dispatch = useDispatch();
+  const standart = useSelector(selectStandart);
+  const van = useSelector(selectVan);
+  const premium = useSelector(selectPremium);
   return (
     <View>
       <View style={styles.container}>
-        <TouchableOpacity activeOpacity={0.7} style={styles.typeCar}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.typeCar}
+          onPress={() => [
+            dispatch(setStandart(true)),
+            dispatch(setPremium(false)),
+            dispatch(setVan(false)),
+          ]}
+        >
           <Image style={styles.img} source={require("../assets/car.png")} />
           <Text style={styles.title}>Standart</Text>
           <View>
@@ -15,7 +34,15 @@ export default function PickUpTaxi() {
             <Text style={styles.textTime}>4min</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7} style={styles.typeCar}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.typeCar}
+          onPress={() => [
+            dispatch(setStandart(false)),
+            dispatch(setPremium(false)),
+            dispatch(setVan(true)),
+          ]}
+        >
           <Image style={styles.img} source={require("../assets/van.png")} />
           <Text style={styles.title}>Van</Text>
           <View>
@@ -23,7 +50,15 @@ export default function PickUpTaxi() {
             <Text style={styles.textTime}>7min</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7} style={styles.typeCar}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.typeCar}
+          onPress={() => [
+            dispatch(setStandart(false)),
+            dispatch(setPremium(true)),
+            dispatch(setVan(false)),
+          ]}
+        >
           <Image
             style={styles.img}
             source={require("../assets/sedan-car-model.png")}
@@ -42,13 +77,13 @@ export default function PickUpTaxi() {
 const styles = StyleSheet.create({
   container: {
     width: "90%",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   typeCar: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 10
+    marginTop: 10,
   },
   img: {
     width: 50,

@@ -2,18 +2,20 @@ import { GOOGLE_MAPS_API_KEY } from "@env";
 import { Entypo, Fontisto } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { get, ref as firebaseRef } from "firebase/database";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  TouchableHighlight,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useDispatch, useSelector } from "react-redux";
 import Destination from "../../components/Destinstion";
-import { auth } from "../../components/firebase";
+import { auth, database } from "../../components/firebase";
 import Map from "../../components/Map";
 import PickUpTaxi from "../../components/PickUpTaxi";
 import WayPointInput from "../../components/WayPointInput";
@@ -26,14 +28,24 @@ import BtnSubmit from "../registration/BtnSubmit";
 import BtnCard from "./BtnCard";
 import BtnPickUp from "./BtnPickUp";
 import { mainStyles } from "./mainStyle";
+import { selectStandart, selectVan, selectPremium } from "../../slice/typeCar";
+import BtnDecline from "./BtnDecline";
 
 export default function Main({ navigation }) {
+  const [driver, setDriver] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [applyActive, setApplyActive] = useState(false);
   const [user, setUser] = useState({});
   const [wayPointAdd, setWayPointAdd] = useState(false);
+  const [requestState, setRequestState] = useState(false);
 
+  useEffect(async () => {
+    const dbRef = firebaseRef(database);
+    const db = await get(dbRef);
+    setDriver(db.val());
+  }, []);
+  console.log(driver);
   const logOutUser = async () => {
     await signOut(auth);
     navigation.navigate("registration");
@@ -52,7 +64,6 @@ export default function Main({ navigation }) {
   });
 
   const ref = useRef();
-  const btnRef = useRef();
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -83,6 +94,12 @@ export default function Main({ navigation }) {
     text = JSON.stringify(location);
   }
 
+  const standart = useSelector(selectStandart);
+  const van = useSelector(selectVan);
+  const premium = useSelector(selectPremium);
+  // if (!driver) {
+  //   return <ActivityIndicator />;
+  // }
   return (
     <View style={mainStyles.container}>
       <View style={mainStyles.box}>
@@ -209,7 +226,9 @@ export default function Main({ navigation }) {
         {destination && origin && (
           <TouchableOpacity
             style={
-              applyActive == true ? { display: "none" } : { display: "flex" }
+              applyActive || requestState == true
+                ? { display: "none" }
+                : { display: "flex" }
             }
             activeOpacity={0.7}
             onPress={() => setApplyActive(true)}
@@ -224,9 +243,81 @@ export default function Main({ navigation }) {
           <TouchableOpacity activeOpacity={0.7}>
             <BtnCard />
           </TouchableOpacity>
-            <TouchableOpacity>
-              <BtnPickUp text="Request"/>
-            </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => [setRequestState(true), setApplyActive(false)]}
+          >
+            <BtnPickUp text="Request" />
+          </TouchableOpacity>
+        </View>
+      )}
+      {requestState && standart && (
+        <View style={styles.pickUp}>
+          <View style={styles.driver}>
+            <View style={styles.boxDriver}>
+              <Image
+                style={styles.imgDriver}
+                source={{ uri: `${driver.Standart.John.img}` }}
+              />
+              <View style={styles.info}>
+                <Text style={styles.name}>{driver.Standart.John.name}</Text>
+                <Text style={styles.car}>{driver.Standart.John.car}</Text>
+              </View>
+            </View>
+            <Text style={styles.cost}>{driver.Standart.John.cost}$</Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => [setRequestState(false), setApplyActive(true)]}
+          >
+            <BtnDecline text="Decline" />
+          </TouchableOpacity>
+        </View>
+      )}
+      {requestState && van && (
+        <View style={styles.pickUp}>
+          <View style={styles.driver}>
+            <View style={styles.boxDriver}>
+              <Image
+                style={styles.imgDriver}
+                source={{ uri: `${driver.Van.Michael.img}` }}
+              />
+              <View style={styles.info}>
+                <Text style={styles.name}>{driver.Van.Michael.name}</Text>
+                <Text style={styles.car}>{driver.Van.Michael.car}</Text>
+              </View>
+            </View>
+            <Text style={styles.cost}>{driver.Van.Michael.cost}$</Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => [setRequestState(false), setApplyActive(true)]}
+          >
+            <BtnDecline text="Decline" />
+          </TouchableOpacity>
+        </View>
+      )}
+      {requestState && premium && (
+        <View style={styles.pickUp}>
+          <View style={styles.driver}>
+            <View style={styles.boxDriver}>
+              <Image
+                style={styles.imgDriver}
+                source={{ uri: `${driver.Premium.Willam.img}` }}
+              />
+              <View style={styles.info}>
+                <Text style={styles.name}>{driver.Premium.Willam.name}</Text>
+                <Text style={styles.car}>{driver.Premium.Willam.car}</Text>
+              </View>
+            </View>
+
+            <Text style={styles.cost}>{driver.Premium.Willam.cost}$</Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => [setRequestState(false), setApplyActive(true)]}
+          >
+            <BtnDecline text="Decline" />
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -273,7 +364,6 @@ const styles = StyleSheet.create({
     color: "#2076db",
   },
   pickUp: {
-    backgroundColor: "red",
     width: "90%",
     alignSelf: "center",
     bottom: 0,
@@ -281,5 +371,38 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+  },
+  driver: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  name: {
+    fontFamily: "qb",
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#414560",
+  },
+  car: {
+    fontFamily: "qb",
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#414560",
+  },
+  imgDriver: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+  cost: {
+    fontFamily: "qb",
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#414560",
+    textAlign: "right",
+  },
+  boxDriver: {
+    flexDirection: "row",
   },
 });
