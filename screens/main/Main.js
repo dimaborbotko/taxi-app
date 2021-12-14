@@ -1,61 +1,63 @@
-import { GOOGLE_MAPS_API_KEY } from "@env";
-import { Entypo, Fontisto } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { get, ref as firebaseRef } from "firebase/database";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Destination from "../../components/Destinstion";
 import { auth, database } from "../../components/firebase";
+import IconsAreas from "../../components/IconsAreas";
 import Map from "../../components/Map";
+import OriginAutocomplete from "../../components/OriginAutocomplete";
 import PickUpTaxi from "../../components/PickUpTaxi";
 import WayPointInput from "../../components/WayPointInput";
 import {
+  selectBtnWayPoint,
   selectDestination,
   selectOrigin,
-  setOrigin,
+  setOrigin
 } from "../../slice/navSlice";
+import { selectPremium, selectStandart, selectVan } from "../../slice/typeCar";
 import BtnSubmit from "../registration/BtnSubmit";
 import BtnCard from "./BtnCard";
+import BtnDecline from "./BtnDecline";
 import BtnPickUp from "./BtnPickUp";
 import { mainStyles } from "./mainStyle";
-import { selectStandart, selectVan, selectPremium } from "../../slice/typeCar";
-import BtnDecline from "./BtnDecline";
 
 export default function Main({ navigation }) {
+  // States
   const [driver, setDriver] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [applyActive, setApplyActive] = useState(false);
   const [user, setUser] = useState({});
-  const [wayPointAdd, setWayPointAdd] = useState(false);
   const [requestState, setRequestState] = useState(false);
+  const [active, setActive] = useState(false);
 
+  // drivers database
   useEffect(async () => {
     const dbRef = firebaseRef(database);
     const db = await get(dbRef);
     setDriver(db.val());
   }, []);
-  console.log(driver);
+
+  // Logout
   const logOutUser = async () => {
     await signOut(auth);
     navigation.navigate("registration");
     console.log(logOutUser);
   };
+
+  // Redux Selectors
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
+  const standart = useSelector(selectStandart);
+  const van = useSelector(selectVan);
+  const premium = useSelector(selectPremium);
+  const btnWayPoint = useSelector(selectBtnWayPoint)
 
-  const dispatch = useDispatch();
-
+  // If not login go to registration form
   onAuthStateChanged(auth, (currentUser) => {
     if (!currentUser) {
       navigation.navigate("registration");
@@ -63,17 +65,7 @@ export default function Main({ navigation }) {
     setUser(currentUser);
   });
 
-  const ref = useRef();
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
-    if (active == true) {
-      ref.current.setAddressText("My current location");
-    } else {
-      ref.current.setAddressText("");
-    }
-  }, [active]);
-
+  // Request for geolocation permission and getting current location
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -87,6 +79,7 @@ export default function Main({ navigation }) {
     })();
   }, []);
 
+  // Check geolocation error
   let text = "Waiting..";
   if (errorMsg) {
     text = errorMsg;
@@ -94,13 +87,11 @@ export default function Main({ navigation }) {
     text = JSON.stringify(location);
   }
 
-  const standart = useSelector(selectStandart);
-  const van = useSelector(selectVan);
-  const premium = useSelector(selectPremium);
-  // if (!driver) {
-  //   return <ActivityIndicator />;
-  // }
+  // Redux and Ref for searching area
+  const dispatch = useDispatch();
+
   return (
+    // Routing
     <View style={mainStyles.container}>
       <View style={mainStyles.box}>
         <Map />
@@ -110,88 +101,24 @@ export default function Main({ navigation }) {
             <Text style={mainStyles.title}>Where are you going?</Text>
           </View>
 
+          {/* Destination and waypoint searching areas */}
           <Destination />
+          {btnWayPoint && <WayPointInput />}
 
-          {wayPointAdd && <WayPointInput />}
-
+          {/* Icons between searching areas */}
           <View style={styles.toGo}>
-            <View
-              style={{
-                marginLeft: 20,
-                marginBottom: 18,
-                marginTop: -10,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Fontisto name="arrow-return-right" size={20} color="#414560" />
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => setWayPointAdd(true)}
-              >
-                <Entypo
-                  style={{ marginRight: 15 }}
-                  name="plus"
-                  size={27}
-                  color="#414560"
-                />
-              </TouchableOpacity>
-            </View>
+            <IconsAreas />
 
-            <GooglePlacesAutocomplete
-              ref={ref}
-              styles={{
-                container: {
-                  flex: 0,
-                  alignItems: "center",
-                  marginBottom: 20,
-                },
-                textInputContainer: {
-                  width: "90%",
-                },
-                textInput: {
-                  fontFamily: "qsb",
-                  fontSize: 14,
-                },
-                listView: {
-                  maxHeight: 200,
-                  width: "90%",
-                },
-                row: {
-                  backgroundColor: "#cad1d9",
-                },
-                separator: {
-                  backgroundColor: "#fff",
-                  height: 1,
-                },
-              }}
-              enablePoweredByContainer={false}
-              minLength={2}
-              query={{
-                key: GOOGLE_MAPS_API_KEY,
-                language: "en",
-              }}
-              placeholder="Where from?"
-              nearbyPlacesAPI="GooglePlacesSearch"
-              debounce={400}
-              onPress={(data, details = null) => {
-                dispatch(
-                  setOrigin({
-                    location: details.geometry.location,
-                    description: data.description,
-                    name: details.name,
-                  })
-                );
-                console.log(data);
-              }}
-              fetchDetails={true}
-              returnKeyType={"search"}
+            {/* Origin searching area */}
+            <OriginAutocomplete
               setAddressText={"My current location"}
+              active={active}
             />
           </View>
         </View>
       </View>
+
+      {/* Btn my current location */}
       <View style={styles.btn}>
         <TouchableOpacity
           style={active ? { display: "none" } : { display: "flex" }}
@@ -223,6 +150,8 @@ export default function Main({ navigation }) {
             </View>
           </View>
         </TouchableOpacity>
+
+        {/* Apply btn */}
         {destination && origin && (
           <TouchableOpacity
             style={
@@ -237,6 +166,8 @@ export default function Main({ navigation }) {
           </TouchableOpacity>
         )}
       </View>
+
+      {/* Choose type of car */}
       {applyActive && (
         <View style={styles.pickUp}>
           <PickUpTaxi />
@@ -250,6 +181,8 @@ export default function Main({ navigation }) {
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Driver */}
       {requestState && standart && (
         <View style={styles.pickUp}>
           <View style={styles.driver}>

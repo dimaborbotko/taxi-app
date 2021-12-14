@@ -6,8 +6,10 @@ const initialState = {
   waypoint: null,
 
   destination: null,
- 
+
   travelTimeInformation: null,
+
+  btnwaypoint: null,
 };
 
 export const navSlice = createSlice({
@@ -18,7 +20,7 @@ export const navSlice = createSlice({
       state.origin = action.payload;
     },
     setWaypoint: (state, action) => {
-      state.waypoint = action.payload
+      state.waypoint = action.payload;
     },
     setDestination: (state, action) => {
       state.destination = action.payload;
@@ -26,17 +28,26 @@ export const navSlice = createSlice({
     setTravelTimeInformation: (state, action) => {
       state.travelTimeInformation = action.payload;
     },
+    setbtnwaypoint: (state, action) => {
+      state.btnwaypoint = action.payload;
+    },
   },
 });
 
-export const { setOrigin, setWaypoint, setDestination, setTravelTimeInformation } =
-  navSlice.actions;
+export const {
+  setOrigin,
+  setWaypoint,
+  setDestination,
+  setTravelTimeInformation,
+  setbtnwaypoint,
+} = navSlice.actions;
 
 // Selectors
 export const selectOrigin = (state) => state.nav.origin;
-export const selectWayPoint = (state) => state.nav.waypoint
+export const selectWayPoint = (state) => state.nav.waypoint;
 export const selectDestination = (state) => state.nav.destination;
 export const selectTravelTimeInformation = (state) =>
   state.nav.travelTimeInformation;
+export const selectBtnWayPoint = (state) => state.nav.btnwaypoint;
 
 export default navSlice.reducer;
