@@ -11,12 +11,15 @@ import IconsAreas from "../../components/IconsAreas";
 import Map from "../../components/Map";
 import OriginAutocomplete from "../../components/OriginAutocomplete";
 import PickUpTaxi from "../../components/PickUpTaxi";
+import PremiumDrivers from "../../components/PremiumDrivers";
+import StandartDrivers from "../../components/StandartDrivers";
+import VanDrivers from "../../components/VanDrivers";
 import WayPointInput from "../../components/WayPointInput";
 import {
   selectBtnWayPoint,
   selectDestination,
   selectOrigin,
-  setOrigin
+  setOrigin,
 } from "../../slice/navSlice";
 import { selectPremium, selectStandart, selectVan } from "../../slice/typeCar";
 import BtnSubmit from "../registration/BtnSubmit";
@@ -55,7 +58,7 @@ export default function Main({ navigation }) {
   const standart = useSelector(selectStandart);
   const van = useSelector(selectVan);
   const premium = useSelector(selectPremium);
-  const btnWayPoint = useSelector(selectBtnWayPoint)
+  const btnWayPoint = useSelector(selectBtnWayPoint);
 
   // If not login go to registration form
   onAuthStateChanged(auth, (currentUser) => {
@@ -171,7 +174,10 @@ export default function Main({ navigation }) {
       {applyActive && (
         <View style={styles.pickUp}>
           <PickUpTaxi />
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate("standart")}
+          >
             <BtnCard />
           </TouchableOpacity>
           <TouchableOpacity
@@ -185,19 +191,7 @@ export default function Main({ navigation }) {
       {/* Driver */}
       {requestState && standart && (
         <View style={styles.pickUp}>
-          <View style={styles.driver}>
-            <View style={styles.boxDriver}>
-              <Image
-                style={styles.imgDriver}
-                source={{ uri: `${driver.Standart.John.img}` }}
-              />
-              <View style={styles.info}>
-                <Text style={styles.name}>{driver.Standart.John.name}</Text>
-                <Text style={styles.car}>{driver.Standart.John.car}</Text>
-              </View>
-            </View>
-            <Text style={styles.cost}>{driver.Standart.John.cost}$</Text>
-          </View>
+          <StandartDrivers />
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => [setRequestState(false), setApplyActive(true)]}
@@ -208,19 +202,7 @@ export default function Main({ navigation }) {
       )}
       {requestState && van && (
         <View style={styles.pickUp}>
-          <View style={styles.driver}>
-            <View style={styles.boxDriver}>
-              <Image
-                style={styles.imgDriver}
-                source={{ uri: `${driver.Van.Michael.img}` }}
-              />
-              <View style={styles.info}>
-                <Text style={styles.name}>{driver.Van.Michael.name}</Text>
-                <Text style={styles.car}>{driver.Van.Michael.car}</Text>
-              </View>
-            </View>
-            <Text style={styles.cost}>{driver.Van.Michael.cost}$</Text>
-          </View>
+          <VanDrivers />
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => [setRequestState(false), setApplyActive(true)]}
@@ -231,20 +213,7 @@ export default function Main({ navigation }) {
       )}
       {requestState && premium && (
         <View style={styles.pickUp}>
-          <View style={styles.driver}>
-            <View style={styles.boxDriver}>
-              <Image
-                style={styles.imgDriver}
-                source={{ uri: `${driver.Premium.Willam.img}` }}
-              />
-              <View style={styles.info}>
-                <Text style={styles.name}>{driver.Premium.Willam.name}</Text>
-                <Text style={styles.car}>{driver.Premium.Willam.car}</Text>
-              </View>
-            </View>
-
-            <Text style={styles.cost}>{driver.Premium.Willam.cost}$</Text>
-          </View>
+          <PremiumDrivers />
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => [setRequestState(false), setApplyActive(true)]}

@@ -1,20 +1,30 @@
-import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { get, ref as firebaseRef } from "firebase/database";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch } from "react-redux";
 import {
-  setStandart,
-  setVan,
-  setPremium,
-  selectStandart,
-  selectVan,
-  selectPremium,
+  setPremium, setStandart,
+  setVan
 } from "../slice/typeCar";
+import { database } from "./firebase";
 
 export default function PickUpTaxi() {
   const dispatch = useDispatch();
-  const standart = useSelector(selectStandart);
-  const van = useSelector(selectVan);
-  const premium = useSelector(selectPremium);
+
+  const [driver, setDriver] = useState(null);
+  useEffect(async () => {
+    const dbRef = firebaseRef(database);
+    const db = await get(dbRef);
+    setDriver(db.val());
+  }, []);
+
+  console.log(driver)
+  if(!driver){
+    return(
+      <ActivityIndicator />
+    )
+  }
+
   return (
     <View>
       <View style={styles.container}>
@@ -30,7 +40,7 @@ export default function PickUpTaxi() {
           <Image style={styles.img} source={require("../assets/car.png")} />
           <Text style={styles.title}>Standart</Text>
           <View>
-            <Text style={styles.textCost}>5$</Text>
+            <Text style={styles.textCost}>{driver.Standart.John.cost}$</Text>
             <Text style={styles.textTime}>4min</Text>
           </View>
         </TouchableOpacity>
@@ -46,7 +56,7 @@ export default function PickUpTaxi() {
           <Image style={styles.img} source={require("../assets/van.png")} />
           <Text style={styles.title}>Van</Text>
           <View>
-            <Text style={styles.textCost}>5$</Text>
+            <Text style={styles.textCost}>{driver.Van.Michael.cost}$</Text>
             <Text style={styles.textTime}>7min</Text>
           </View>
         </TouchableOpacity>
@@ -65,7 +75,7 @@ export default function PickUpTaxi() {
           />
           <Text style={styles.title}>Premium</Text>
           <View style={styles.info}>
-            <Text style={styles.textCost}>5$</Text>
+            <Text style={styles.textCost}>{driver.Premium.Willam.cost}$</Text>
             <Text style={styles.textTime}>2min</Text>
           </View>
         </TouchableOpacity>

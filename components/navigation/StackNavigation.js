@@ -13,6 +13,7 @@ import Main from "../../screens/main/Main";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { auth } from "../../components/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import StandartDrivers from "../StandartDrivers";
 
 const Stack = createNativeStackNavigator();
 const fonts = () =>
@@ -70,6 +71,7 @@ export default function StackNavigation({navigation}) {
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="main" component={Main} />
             <Stack.Screen name="registration" component={Form} />
+            <Stack.Screen name="standart" component={StandartDrivers} />
             
             
           </Stack.Navigator>
