@@ -50,7 +50,6 @@ export default function Destination() {
             name: details.name,
           })
         );
-        console.log(data);
       }}
       fetchDetails={true}
       returnKeyType={"search"}

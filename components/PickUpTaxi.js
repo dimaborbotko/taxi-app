@@ -17,8 +17,6 @@ export default function PickUpTaxi() {
     const db = await get(dbRef);
     setDriver(db.val());
   }, []);
-
-  console.log(driver)
   if(!driver){
     return(
       <ActivityIndicator />

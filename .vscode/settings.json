@@ -5,6 +5,8 @@
         "Formik",
         "Hellet",
         "Ionicons",
-        "reduxjs"
+        "reduxjs",
+        "standart",
+        "Willam"
     ]
 }

@@ -29,7 +29,6 @@ export default function StackNavigation({navigation}) {
   const [user, setUser] = useState({});
   const [isFirstLaunched, setIsFirstLaunched] = useState(null);
   const [isEmailLogin, setIsEmailLogin] = useState(null);
-  console.log(isEmailLogin);
 
   onAuthStateChanged(auth, (currentUser) => {
     setUser(currentUser);
@@ -49,7 +48,7 @@ export default function StackNavigation({navigation}) {
 
 
 
-  console.log(user);
+
   if (font) {
     if (isFirstLaunched === null) {
       return null;

@@ -60,7 +60,6 @@ export default function OriginAutocomplete({ setAddressText, active }) {
             name: details.name,
           })
         );
-        console.log(data);
       }}
       fetchDetails={true}
       returnKeyType={"search"}

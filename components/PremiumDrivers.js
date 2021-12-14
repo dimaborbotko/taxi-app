@@ -1,7 +1,16 @@
 import { get, ref as firebaseRef } from "firebase/database";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Stylesheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { database } from "./firebase";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { dStyles } from "../screens/main/driverStyle";
 
 export default function PremiumDrivers() {
   const [driver, setDriver] = useState(null);
@@ -10,57 +19,32 @@ export default function PremiumDrivers() {
     const db = await get(dbRef);
     setDriver(db.val());
   }, []);
-
-  console.log(driver);
   if (!driver) {
     return <ActivityIndicator />;
   }
   return (
-    <View style={styles.driver}>
-        <View style={styles.boxDriver}>
-            <Image style={styles.imgDriver} source={{uri: `${driver.Premium.Willam.img}`}}/>
-            <View style={styles.info}>
-                <Text style={styles.name}>{driver.Premium.Willam.name}</Text>
-                <Text style={styles.car}>{driver.Premium.Willam.car}</Text>
-            </View>
+    <View style={dStyles.driver}>
+      <View style={dStyles.boxDriver}>
+        <Image
+          style={dStyles.imgDriver}
+          source={{ uri: `${driver.Premium.Willam.img}` }}
+        />
+        <View style={dStyles.info}>
+          <Text style={dStyles.name}>{driver.Premium.Willam.name}</Text>
+          <Text style={dStyles.car}>{driver.Premium.Willam.car}</Text>
+          <Text style={dStyles.cost}>{driver.Premium.Willam.cost}$</Text>
         </View>
-        <Text style={styles.cost}>{driver.Premium.Willam.cost}$</Text>
+      </View>
+      <View style={dStyles.driverInfo}>
+        <TouchableOpacity style={dStyles.menu} activeOpacity={0.7}>
+          <Ionicons name="ios-menu-outline" size={25} color="#428be7" />
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.7}>
+          <FontAwesome5 name="phone-square" size={35} color="#428be7" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  driver: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 10,
-  },
-  name: {
-    fontFamily: "qb",
-    fontSize: 18,
-    marginLeft: 10,
-    color: "#414560",
-  },
-  car: {
-    fontFamily: "qb",
-    fontSize: 18,
-    marginLeft: 10,
-    color: "#414560",
-  },
-  imgDriver: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-  },
-  cost: {
-    fontFamily: "qb",
-    fontSize: 18,
-    marginLeft: 10,
-    color: "#414560",
-    textAlign: "right",
-  },
-  boxDriver: {
-    flexDirection: "row",
-  },
-});
+

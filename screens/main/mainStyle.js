@@ -6,16 +6,18 @@ export const mainStyles = StyleSheet.create({
     flex: 1,
   },
   box: {
-    alignItems: "center",
+    alignSelf: "center",
+    position: "absolute",
+    width: "90%",
     
   },
   inputBox: {
-    width: "90%",
+    
     backgroundColor: "#cad1d9",
     borderRadius: 15,
     alignItems: "center",
+    width: '100%',
     marginTop: '15%',
-    position: "absolute",
     zIndex: 10
   },
   textBox: {

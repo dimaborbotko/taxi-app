@@ -27,6 +27,7 @@ import BtnCard from "./BtnCard";
 import BtnDecline from "./BtnDecline";
 import BtnPickUp from "./BtnPickUp";
 import { mainStyles } from "./mainStyle";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Main({ navigation }) {
   // States
@@ -49,7 +50,6 @@ export default function Main({ navigation }) {
   const logOutUser = async () => {
     await signOut(auth);
     navigation.navigate("registration");
-    console.log(logOutUser);
   };
 
   // Redux Selectors
@@ -96,9 +96,14 @@ export default function Main({ navigation }) {
   return (
     // Routing
     <View style={mainStyles.container}>
-      <View style={mainStyles.box}>
-        <Map />
-        <View style={mainStyles.inputBox}>
+      <Map />
+      <View style={[mainStyles.box]}>
+        <View
+          style={[
+            mainStyles.inputBox,
+            requestState === true ? { display: "none" } : { display: "flex" },
+          ]}
+        >
           <View style={mainStyles.textBox}>
             <Text style={mainStyles.greeting}>Welcome Back, {user?.email}</Text>
             <Text style={mainStyles.title}>Where are you going?</Text>
@@ -120,24 +125,34 @@ export default function Main({ navigation }) {
           </View>
         </View>
       </View>
+      {requestState && (
+        <View style={mainStyles.box}>
+          <View style={[mainStyles.inputBox, styles.infCont]}>
+            <TouchableOpacity style={styles.back} activeOpacity={0.7} onPress={() => setRequestState(false)}>
+              <Ionicons name="arrow-back-circle" size={45} color="#fff" />
+            </TouchableOpacity>
+            <View style={styles.timeInfo}>
+              <Text style={styles.subText}>I`ll be at your</Text>
+              <Text style={styles.text}>place in 5 minutes</Text>
+            </View>
+          </View>
+        </View>
+      )}
 
       {/* Btn my current location */}
       <View style={styles.btn}>
         <TouchableOpacity
           style={active ? { display: "none" } : { display: "flex" }}
           activeOpacity={0.7}
-          onPress={
-            (console.log(origin),
-            () => {
-              dispatch(
-                setOrigin({
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                })
-              );
-              setActive(true);
-            })
-          }
+          onPress={() => {
+            dispatch(
+              setOrigin({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+              })
+            );
+            setActive(true);
+          }}
         >
           <View
             style={[
@@ -236,6 +251,27 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "90%",
     justifyContent: "center",
+  },
+  infCont: {
+    flexDirection: "row",
+    borderRadius: 5
+  },
+  timeInfo: {
+    marginLeft: 10,
+    marginVertical: 15
+  },
+  back: {
+    marginLeft: 10,
+  },
+  subText: {
+    fontFamily: "qb",
+    fontSize: 17,
+    color: "#414560",
+  },
+  text: {
+    fontFamily: "qb",
+    fontSize: 28  ,
+    color: "#414560",
   },
   btn: {
     flex: 1,
