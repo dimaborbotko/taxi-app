@@ -22,7 +22,6 @@ export default function Form({ navigation }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [name, setName] = useState("");
   
 
@@ -42,7 +41,7 @@ export default function Form({ navigation }) {
   console.log(name)
 
   const signUpUser = () => {
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password, name)
       .then((re) => {
         console.log(re);
         navigation.navigate("main");

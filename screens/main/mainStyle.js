@@ -9,6 +9,7 @@ export const mainStyles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     width: "90%",
+    zIndex: 1000
     
   },
   inputBox: {
@@ -35,5 +36,14 @@ export const mainStyles = StyleSheet.create({
       fontSize: 23,
       color: '#414560'
   },
+
+
+  otherScreens: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: 'qb',
+    fontSize: 32
+  }
   
 });

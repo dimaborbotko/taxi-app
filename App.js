@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import StackNavigation from "./components/navigation/StackNavigation";
+import 'react-native-gesture-handler';
+import DrawerNavigation from "./components/navigation/DrawerNavigation";
 
 
 export default function App() {

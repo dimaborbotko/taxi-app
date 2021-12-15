@@ -8,6 +8,7 @@ export default function Destination() {
   const dispatch = useDispatch();
   return (
     <GooglePlacesAutocomplete
+      numberOfLines={2}
       styles={{
         container: {
           flex: 0,

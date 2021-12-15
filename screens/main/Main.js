@@ -19,7 +19,13 @@ import {
   selectBtnWayPoint,
   selectDestination,
   selectOrigin,
+  selectApply,
+  selectRequest,
+  selectLocation,
   setOrigin,
+  setRequest,
+  setApply,
+  setLocation,
 } from "../../slice/navSlice";
 import { selectPremium, selectStandart, selectVan } from "../../slice/typeCar";
 import BtnSubmit from "../registration/BtnSubmit";
@@ -27,16 +33,13 @@ import BtnCard from "./BtnCard";
 import BtnDecline from "./BtnDecline";
 import BtnPickUp from "./BtnPickUp";
 import { mainStyles } from "./mainStyle";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function Main({ navigation }) {
   // States
   const [driver, setDriver] = useState(null);
-  const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [applyActive, setApplyActive] = useState(false);
   const [user, setUser] = useState({});
-  const [requestState, setRequestState] = useState(false);
   const [active, setActive] = useState(false);
 
   // drivers database
@@ -59,11 +62,16 @@ export default function Main({ navigation }) {
   const van = useSelector(selectVan);
   const premium = useSelector(selectPremium);
   const btnWayPoint = useSelector(selectBtnWayPoint);
+  const apply = useSelector(selectApply);
+  const request = useSelector(selectRequest);
+  const location = useSelector(selectLocation);
 
   // If not login go to registration form
   onAuthStateChanged(auth, (currentUser) => {
     if (!currentUser) {
       navigation.navigate("registration");
+    } else {
+      navigation.navigate("drawer");
     }
     setUser(currentUser);
   });
@@ -78,7 +86,7 @@ export default function Main({ navigation }) {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      dispatch(setLocation(location));
     })();
   }, []);
 
@@ -90,7 +98,7 @@ export default function Main({ navigation }) {
     text = JSON.stringify(location);
   }
 
-  // Redux and Ref for searching area
+  // Redux
   const dispatch = useDispatch();
 
   return (
@@ -101,7 +109,7 @@ export default function Main({ navigation }) {
         <View
           style={[
             mainStyles.inputBox,
-            requestState === true ? { display: "none" } : { display: "flex" },
+            request === true ? { display: "none" } : { display: "flex" },
           ]}
         >
           <View style={mainStyles.textBox}>
@@ -125,10 +133,14 @@ export default function Main({ navigation }) {
           </View>
         </View>
       </View>
-      {requestState && (
+      {request && (
         <View style={mainStyles.box}>
           <View style={[mainStyles.inputBox, styles.infCont]}>
-            <TouchableOpacity style={styles.back} activeOpacity={0.7} onPress={() => setRequestState(false)}>
+            <TouchableOpacity
+              style={styles.back}
+              activeOpacity={0.7}
+              onPress={() => dispatch(setRequest(false))}
+            >
               <Ionicons name="arrow-back-circle" size={45} color="#fff" />
             </TouchableOpacity>
             <View style={styles.timeInfo}>
@@ -173,20 +185,59 @@ export default function Main({ navigation }) {
         {destination && origin && (
           <TouchableOpacity
             style={
-              applyActive || requestState == true
+              apply || request == true
                 ? { display: "none" }
                 : { display: "flex" }
             }
             activeOpacity={0.7}
-            onPress={() => setApplyActive(true)}
+            onPress={() => [dispatch(setApply(true)), console.log(apply)]}
           >
             <BtnSubmit text="Apply" />
           </TouchableOpacity>
         )}
       </View>
 
+      {/* Btns location and menu bottom */}
+      <View style={styles.btnsBottoms}>
+        <View style={styles.containerIcon}>
+          <TouchableOpacity
+          onPress={() => navigation.openDrawer()}
+            style={[
+              styles.boxMenu,
+              apply || request == true
+                ? { display: "none" }
+                : { display: "flex" },
+            ]}
+          >
+            <Ionicons name="menu-outline" size={35} color="#bfc0c4" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.boxLocation,
+              apply || request == true
+                ? { display: "none" }
+                : { display: "flex" },
+            ]}
+            onPress={() => {
+              dispatch(
+                setOrigin({
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                })
+              );
+            }}
+          >
+            <MaterialCommunityIcons
+              name="vector-circle"
+              size={35}
+              color="#bfc0c4"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {/* Choose type of car */}
-      {applyActive && (
+      {apply && (
         <View style={styles.pickUp}>
           <PickUpTaxi />
           <TouchableOpacity
@@ -196,42 +247,55 @@ export default function Main({ navigation }) {
             <BtnCard />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => [setRequestState(true), setApplyActive(false)]}
+            onPress={() => [
+              dispatch(setRequest(true)),
+              dispatch(setApply(false)),
+            ]}
           >
             <BtnPickUp text="Request" />
           </TouchableOpacity>
         </View>
       )}
 
-      {/* Driver */}
-      {requestState && standart && (
+      {/* Drivers */}
+      {request && standart && (
         <View style={styles.pickUp}>
           <StandartDrivers />
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => [setRequestState(false), setApplyActive(true)]}
+            onPress={() => [
+              dispatch(setRequest(false)),
+              dispatch(setApply(true)),
+              console.log(apply),
+            ]}
           >
             <BtnDecline text="Decline" />
           </TouchableOpacity>
         </View>
       )}
-      {requestState && van && (
+      {request && van && (
         <View style={styles.pickUp}>
           <VanDrivers />
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => [setRequestState(false), setApplyActive(true)]}
+            onPress={() => [
+              dispatch(setRequest(false)),
+              dispatch(setApply(true)),
+            ]}
           >
             <BtnDecline text="Decline" />
           </TouchableOpacity>
         </View>
       )}
-      {requestState && premium && (
+      {request && premium && (
         <View style={styles.pickUp}>
           <PremiumDrivers />
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => [setRequestState(false), setApplyActive(true)]}
+            onPress={() => [
+              dispatch(setRequest(false)),
+              dispatch(setApply(true)),
+            ]}
           >
             <BtnDecline text="Decline" />
           </TouchableOpacity>
@@ -254,11 +318,11 @@ const styles = StyleSheet.create({
   },
   infCont: {
     flexDirection: "row",
-    borderRadius: 5
+    borderRadius: 5,
   },
   timeInfo: {
     marginLeft: 10,
-    marginVertical: 15
+    marginVertical: 15,
   },
   back: {
     marginLeft: 10,
@@ -270,7 +334,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "qb",
-    fontSize: 28  ,
+    fontSize: 28,
     color: "#414560",
   },
   btn: {
@@ -280,6 +344,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     position: "absolute",
     bottom: 100,
+  },
+  btnsBottoms: {
+    position: "absolute",
+    width: "90%",
+    alignSelf: "center",
+    bottom: 40,
   },
   autocomp: {
     flex: 1,
@@ -342,5 +412,25 @@ const styles = StyleSheet.create({
   },
   boxDriver: {
     flexDirection: "row",
+  },
+  containerIcon: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flex: 1,
+  },
+  boxMenu: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 3,
+    paddingLeft: 4,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 4,
+  },
+  boxLocation: {
+    backgroundColor: "#fff",
+    padding: 3,
+    borderRadius: 25,
+    elevation: 4,
   },
 });
