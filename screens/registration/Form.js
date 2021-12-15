@@ -11,8 +11,6 @@ import {
 import { auth } from "../../components/firebase";
 import BtnReg from "./BtnReg";
 import BtnSubmit from "./BtnSubmit";
-// import SignIn from "./SignIn";
-// import SignUp from "./SignUp";
 import { rStyle } from "./styleReg";
 
 export default function Form({ navigation }) {
@@ -31,7 +29,6 @@ export default function Form({ navigation }) {
   const [user, setUser] = useState({});
 
   onAuthStateChanged(auth, (currentUser) => {
-    
     setUser(currentUser)
   })
 
@@ -41,10 +38,10 @@ export default function Form({ navigation }) {
   console.log(name)
 
   const signUpUser = () => {
-    createUserWithEmailAndPassword(auth, email, password, name)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((re) => {
         console.log(re);
-        navigation.navigate("main");
+        navigation.navigate("drawer");
       })
       .catch((re) => {
         console.log(re);
@@ -55,7 +52,7 @@ export default function Form({ navigation }) {
     signInWithEmailAndPassword(auth, emailLogin, passwordLogin)
       .then((re) => {
         console.log(re);
-        navigation.navigate("main");
+        navigation.navigate("drawer");
       })
       .catch((re) => {
         console.log(re);
@@ -84,9 +81,7 @@ export default function Form({ navigation }) {
                 value={name}
                 placeholder="Name"
               />
-              {/* {errors.name && touched.name && (
-            <Text style={{ fontSize: 10, color: "red" }}>{errors.name}</Text>
-          )} */}
+            
               <TextInput
                 name="password"
                 style={[rStyle.inputInfo]}
@@ -95,11 +90,7 @@ export default function Form({ navigation }) {
                 value={password}
                 placeholder="Password"
               />
-              {/* {errors.password && touched.password && (
-            <Text style={{ fontSize: 10, color: "red" }}>
-              {errors.password}
-            </Text>
-          )} */}
+              
               <TextInput
                 name="email"
                 style={[rStyle.inputInfo]}
@@ -119,7 +110,6 @@ export default function Form({ navigation }) {
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
-            // disabled={!isValid}
             onPress={signUpUser}
           >
             <BtnSubmit text="Sign Up" />
@@ -149,11 +139,7 @@ export default function Form({ navigation }) {
               value={emailLogin}
               placeholder="Email"
             />
-            {/* {(errors.name && touched.name) && (
-                <Text style={{ fontSize: 10, color: "red" }}>
-                  {errors.name}
-                </Text>
-              )} */}
+         
             <TextInput
               name="password"
               style={[rStyle.inputInfo]}
@@ -162,24 +148,14 @@ export default function Form({ navigation }) {
               value={passwordLogin}
               placeholder="Password"
             />
-            {/* {(errors.password && touched.password) && (
-                <Text style={{ fontSize: 10, color: "red" }}>
-                  {errors.password}
-                </Text>
-              )} */}
+        
           </View>
           <View style={rStyle.infoSignUp}>
             <TouchableOpacity activeOpacity={0.7}>
               <Text style={rStyle.textSignUp}>Forgot your password?</Text>
             </TouchableOpacity>
           </View>
-          {/* <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => console.log(values)}
-              disabled={!isValid}
-            >
-              <BtnSubmit text="Sign Up" />
-            </TouchableOpacity> */}
+        
         </View>
         <TouchableOpacity
           activeOpacity={0.7}

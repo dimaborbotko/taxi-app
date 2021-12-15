@@ -49,12 +49,6 @@ export default function Main({ navigation }) {
     setDriver(db.val());
   }, []);
 
-  // Logout
-  const logOutUser = async () => {
-    await signOut(auth);
-    navigation.navigate("registration");
-  };
-
   // Redux Selectors
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
@@ -201,7 +195,7 @@ export default function Main({ navigation }) {
       <View style={styles.btnsBottoms}>
         <View style={styles.containerIcon}>
           <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
+            onPress={() => navigation.openDrawer()}
             style={[
               styles.boxMenu,
               apply || request == true

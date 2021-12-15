@@ -16,6 +16,7 @@ const initialState = {
   request: null,
 
   location: null,
+
 };
 
 export const navSlice = createSlice({
