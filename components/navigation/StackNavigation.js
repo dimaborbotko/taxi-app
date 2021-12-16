@@ -62,7 +62,7 @@ export default function StackNavigation({navigation}) {
             <Stack.Screen name="mobileValid" component={SetNumber} />
             <Stack.Screen name="getCode" component={GetCode} />
             <Stack.Screen name="registration" component={Form} />
-            <Stack.Screen name="main" component={Main} />
+            <Stack.Screen name="drawer" component={DrawerNavigation} />
           </Stack.Navigator>
         </NavigationContainer>
       );

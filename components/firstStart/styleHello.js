@@ -42,5 +42,5 @@ export const hStyle = StyleSheet.create({
     fontFamily: 'qsb',
     textAlign: "center",
     color: '#414560'
-  }
+  },
 });

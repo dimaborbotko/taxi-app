@@ -7,17 +7,17 @@ export const rStyle = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    width: "90%",
+    width: "100%",
   },
   btns: {
     flexDirection: "row",
     width: "90%",
     justifyContent: "space-between",
+    alignSelf: "center"
   },
   shadow: {
     elevation: 20,
-    shadowColor: '#000',
-    opacity: 0.6
+    shadowColor: '#fad312',
   },
 
 
@@ -30,8 +30,15 @@ export const rStyle = StyleSheet.create({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     paddingTop: 30,
+    elevation: 14,
+    alignSelf: "center"
   },
-
+frontBlock: {
+  position: "absolute",
+  left: 0,
+  right: 0,
+  
+},
 
   form: {
     backgroundColor: "blue",

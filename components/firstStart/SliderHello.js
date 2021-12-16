@@ -21,8 +21,7 @@ export default function SliderHello({ navigation }) {
           <View style={hStyle.boxText}>
             <Text style={hStyle.text}>Check fare</Text>
             <Text style={hStyle.subText}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry.
+              Request a ride get pecked up bu a nearby community driver
             </Text>
           </View>
         </View>
@@ -34,8 +33,7 @@ export default function SliderHello({ navigation }) {
           <View style={hStyle.boxText}>
             <Text style={hStyle.text}>Book a ride</Text>
             <Text style={hStyle.subText}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry.
+              Huge Drivers network helps find comfortable safe and cheap ride
             </Text>
           </View>
         </View>
@@ -46,9 +44,8 @@ export default function SliderHello({ navigation }) {
           />
           <View style={hStyle.boxText}>
             <Text style={hStyle.text}>Enjoy your trip</Text>
-            <Text style={hStyle.subText}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry.
+            <Text style={[hStyle.subText]}>
+              Know your driver in advance and be able to view current location in real time on the map
             </Text>
           </View>
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('mobileValid')}>
