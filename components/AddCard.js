@@ -11,7 +11,7 @@ import {
   LiteCreditCardInput,
 } from "react-native-credit-card-input";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 export default function AddCard() {
   const [card, setCard] = useState({});
@@ -21,6 +21,12 @@ export default function AddCard() {
   }
   return (
     <View style={styles.container}>
+      <View style={styles.backBox}>
+        <TouchableOpacity style={styles.backBtn} activeOpacity={0.7}>
+          <AntDesign name="arrowleft" size={24} color="black" />
+          <Text style={styles.backText}>My Wallet</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.cardArea}>
         <View style={styles.boxCard}>
           <LiteCreditCardInput
@@ -84,6 +90,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "85%",
     alignSelf: "center",
+  },
+  backBtn: {
+    flexDirection: "row",
+    alignItems: "center"
   },
   cardArea: {
     borderWidth: 2,
