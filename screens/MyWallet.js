@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { operation } from "../operation";
+import { AntDesign } from "@expo/vector-icons";
 
-export default function MyWallet() {
+export default function MyWallet({navigation}) {
   const [active, setActive] = useState(true);
   console.log(operation[0].money);
   return (
@@ -18,6 +19,31 @@ export default function MyWallet() {
         <View style={styles.header}>
           <Text style={styles.title}>My Wallet</Text>
           <Text style={styles.money}>66.450,30$</Text>
+
+          <TouchableOpacity
+            style={[styles.btnAdd]}
+            activeOpacity={0.7}
+            onPress={() => setActive(true)}
+          >
+            <View style={styles.walletAdd}>
+              <Text style={[styles.text]}>Replenish </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.cards}>
+        <View style={styles.contCard}>
+          <Text style={styles.text}>Add new card:</Text>
+          <TouchableOpacity
+            style={[styles.addCard]}
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate('addCard')}
+          >
+            <View style={styles.walletCard}>
+              <AntDesign name="plus" size={18} color="#414560" />
+              <Text style={[styles.text, styles.cardText]}>Press to add</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.btns}>
@@ -78,27 +104,29 @@ export default function MyWallet() {
             <Text style={styles.approve}>Approved by</Text>
           </View>
         )}
-        <ScrollView style={{height: 500}} showsVerticalScrollIndicator={false}>
-            <View style={{flex: 1}}>
-                 {active &&
-            operation.map((item) => {
-              return (
-                <View style={styles.operationList}>
-                  <View style={styles.itemOper}>
-                    <View style={styles.data}>
-                      <Text style={styles.textOper}>{item.month} at</Text>
-                      <Text style={[styles.textOper, styles.timeText]}>
-                        {" "}
-                        {item.time}
-                      </Text>
+        <ScrollView
+          style={{ height: 500 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={{ flex: 1 }}>
+            {active &&
+              operation.map((item) => {
+                return (
+                  <View style={styles.operationList}>
+                    <View style={styles.itemOper}>
+                      <View style={styles.data}>
+                        <Text style={styles.textOper}>{item.month} at</Text>
+                        <Text style={[styles.textOper, styles.timeText]}>
+                          {" "}
+                          {item.time}
+                        </Text>
+                      </View>
+                      <Text style={styles.textOper}>- {item.money}$</Text>
                     </View>
-                    <Text style={styles.textOper}>- {item.money}$</Text>
                   </View>
-                </View>
-              );
-            })}
-            </View>
-         
+                );
+              })}
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -115,6 +143,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     backgroundColor: "#e4e9ed",
     paddingHorizontal: 40,
+    elevation: 6,
   },
   operNow: {
     width: "85%",
@@ -129,10 +158,52 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#414560",
   },
+  btnAdd: {
+    backgroundColor: "#fad312",
+    width: "40%",
+    borderRadius: 20,
+    alignItems: "center",
+    marginTop: 10,
+    elevation: 3,
+  },
+  walletAdd: {
+    padding: 15,
+  },
   money: {
     fontFamily: "qb",
     fontSize: 46,
     color: "#414560",
+  },
+  cards: {
+    paddingHorizontal: 40,
+    paddingBottom: 15,
+    paddingTop: 18,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    marginTop: -30,
+    backgroundColor: '#fad312',
+    elevation: 3
+  },
+  contCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 25,
+  },
+  addCard: {
+    borderWidth: 2,
+    borderColor: "#414560",
+    borderRadius: 20,
+  },
+  walletCard: {
+    padding: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 5,
+  },
+  cardText: {
+    marginLeft: 5,
   },
   pressBtn: {
     borderRadius: 20,

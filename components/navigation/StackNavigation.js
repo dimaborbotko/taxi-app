@@ -16,6 +16,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import StandartDrivers from "../StandartDrivers";
 import DrawerNavigation from "./DrawerNavigation";
 import Settings from "../../screens/Settings";
+import MyWallet from "../../screens/MyWallet";
+import AddCard from "../AddCard";
 
 const Stack = createNativeStackNavigator();
 const fonts = () =>
@@ -74,6 +76,8 @@ export default function StackNavigation({navigation}) {
             <Stack.Screen name="registration" component={Form} />
             <Stack.Screen name="standart" component={StandartDrivers} />
             <Stack.Screen name="settings" component={Settings} />
+            <Stack.Screen name="wallet" component={MyWallet} />
+            <Stack.Screen name="addCard" component={AddCard} />
           </Stack.Navigator>
         </NavigationContainer>
       );
