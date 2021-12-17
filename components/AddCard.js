@@ -1,28 +1,52 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import {
   CreditCardInput,
   LiteCreditCardInput,
 } from "react-native-credit-card-input";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function AddCard() {
   const [card, setCard] = useState({});
-  console.log(card);
+  const [listCard, setListCard] = useState([1]);
+  if (!listCard) {
+    return <ActivityIndicator />;
+  }
   return (
     <View style={styles.container}>
       <View style={styles.cardArea}>
         <View style={styles.boxCard}>
           <LiteCreditCardInput
-            onChange={(form) =>
-            [setCard({ number: form.values.number, data: form.values.expiry, valid: form.valid, status: form.status.expiry }),
-            console.log(form)]
-            }
+            onChange={(form) => [
+              setCard({
+                number: form.values.number,
+                data: form.values.expiry,
+                valid: form.valid,
+                status: form.status.expiry,
+              }),
+            ]}
           />
         </View>
       </View>
 
-      <TouchableOpacity style={styles.btnAdd} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.btnAdd}
+        activeOpacity={0.7}
+        onPress={() => {
+          if (listCard.length === 0) {
+            setListCard(() => listCard.push(card));
+          } else {
+            setListCard((prev) => [...prev, card]);
+          }
+        }}
+      >
         <View style={styles.box}>
           <Text style={styles.text}>Add Card</Text>
         </View>
@@ -31,14 +55,26 @@ export default function AddCard() {
       <View style={styles.cardList}>
         <Text style={styles.textList}>Your cards:</Text>
       </View>
-      {/* {card.map((item) => {
-        return (
-          <View>
-            <Text>{item.number}</Text>
-            <Text>{item.data}</Text>
-          </View>
-        );
-      })} */}
+
+      {listCard.length > 0 &&
+        listCard.map((item, i) => {
+          console.log(item);
+          if (i === 0) {
+            return;
+          }
+          return (
+            <View style={styles.myCardList}>
+              <TouchableOpacity style={styles.listCards} activeOpacity={0.7}>
+                <Ionicons name="card" size={32} color="#414560" />
+                <Text style={styles.listText}>{`${item.number.substring(
+                  0,
+                  5
+                )}**** **** ${item.number.substring(15)}`}</Text>
+                <Text style={styles.listText}>{item.data}</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        })}
     </View>
   );
 }
@@ -78,6 +114,23 @@ const styles = StyleSheet.create({
   textList: {
     fontFamily: "qsb",
     fontSize: 18,
+    color: "#414560",
+  },
+  listCards: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 2,
+    paddingVertical: 7,
+    borderColor: "#414560",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+
+    marginTop: 20,
+  },
+  listText: {
+    fontFamily: "qsb",
+    fontSize: 14,
     color: "#414560",
   },
 });
