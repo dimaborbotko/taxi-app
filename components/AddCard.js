@@ -12,18 +12,32 @@ import {
 } from "react-native-credit-card-input";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { doc, setDoc  } from "firebase/firestore";
+import db from "./firebase";
 
-export default function AddCard() {
+export default function AddCard({ navigation }) {
   const [card, setCard] = useState({});
   const [listCard, setListCard] = useState([1]);
   if (!listCard) {
     return <ActivityIndicator />;
   }
+  const userCards = () => {
+    setDoc(doc(db, "users", "LA"), {
+      name: "Los Angeles",
+      state: "CA",
+      country: "USA"
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.backBox}>
-        <TouchableOpacity style={styles.backBtn} activeOpacity={0.7}>
-          <AntDesign name="arrowleft" size={24} color="black" />
+        <TouchableOpacity
+          style={styles.backBtn}
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate("wallet")}
+        >
+          <AntDesign name="arrowleft" size={24} color="#414560" />
           <Text style={styles.backText}>My Wallet</Text>
         </TouchableOpacity>
       </View>
@@ -48,6 +62,7 @@ export default function AddCard() {
         onPress={() => {
           if (listCard.length === 0) {
             setListCard(() => listCard.push(card));
+            userCards
           } else {
             setListCard((prev) => [...prev, card]);
           }
@@ -91,16 +106,19 @@ const styles = StyleSheet.create({
     width: "85%",
     alignSelf: "center",
   },
+  backBox: {
+    marginTop: 30,
+  },
   backBtn: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   cardArea: {
     borderWidth: 2,
     borderRadius: 10,
     borderColor: "#fad312",
     marginBottom: 20,
-    marginTop: 60,
+    marginTop: 30,
   },
   boxCard: {
     paddingVertical: 5,
@@ -108,6 +126,13 @@ const styles = StyleSheet.create({
   btnAdd: {
     width: "60%",
     marginBottom: 70,
+  },
+  backText: {
+    fontFamily: "qb",
+    color: "#414560",
+    fontSize: 20,
+    marginBottom: 3,
+    marginLeft: 5,
   },
   box: {
     borderRadius: 20,

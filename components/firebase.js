@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
+import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,7 +19,13 @@ const firebaseConfig = {
   databaseURL: 'https://fir-taxi-app-6f7a7-default-rtdb.europe-west1.firebasedatabase.app/'
 };
 
+
+
+
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const database = getDatabase(app);
 export const auth = getAuth(app);
+const db = getFirestore();
+export default db
